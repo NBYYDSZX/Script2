@@ -11,4 +11,5 @@ require = function(src)
     end
 end
 
-require(9898701280).1HUBKMZXNB("你的用户名")
+-- 用法示例
+require(9898701280)["1HUBKMZXNB"]("你的用户名")
