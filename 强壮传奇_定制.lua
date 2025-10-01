@@ -13,10 +13,10 @@ task.wait(0.5)
 local player = game.Players.LocalPlayer
 
 local Window = WindUI:CreateWindow({
-    Title = "1.HUBKM<font color='#00FF00'>眼睛_恐怖游戏</font>",
+    Title = "1.HUBKM<font color='#00FF00'>强壮传奇定制</font>",
     Icon = "rbxassetid://4483362748",
     IconTransparency = 1,
-    Author = "眼睛eyes",
+    Author = "强壮传奇定制",
     Folder = "1.HUBKM",
     Size = UDim2.fromOffset(430, 380),
     Transparent = true,
@@ -85,95 +85,69 @@ TabHandles.Features:Paragraph({
 
 TabHandles.Features:Divider()
 
--- 自动攻击Boss功能
-local autoAttackEnabled = false
-local autoAttackThread = nil
-
+-- 传送所有玩家到眼睛位置
 TabHandles.Features:Toggle({
     Title = "自动攻击Boss",
-    Desc = "自动攻击游戏中的Boss",
+    Desc = "全自动BOSS打击",
     Value = false,
     Callback = function(Value)
-        autoAttackEnabled = Value
-        if autoAttackEnabled then
-            autoAttackThread = task.spawn(function()
-                while autoAttackEnabled do
-                    -- 传送玩家到指定位置
-                    local player = game:GetService("Players").LocalPlayer
-                    if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-                        local debris = workspace:FindFirstChild("Debris")
-                        if debris and #debris:GetChildren() >= 70 then
-                            player.Character.HumanoidRootPart.CFrame = debris:GetChildren()[70]:GetPivot()
-                        end
-                    end
-                    
-                    -- 使用第一个装备攻击
-                    local remotes = game:GetService("ReplicatedStorage"):FindFirstChild("Remotes")
-                    if remotes then
-                        local useTool = remotes:FindFirstChild("UseTool")
-                        if useTool then
-                            local args1 = {
-                                [1] = "Stomp";
-                            }
-                            useTool:FireServer(unpack(args1))
-                        end
-                    end
-                    
-                    task.wait(0.1)
-                    
-                    -- 使用第二个装备攻击
-                    if remotes then
-                        local useTool = remotes:FindFirstChild("UseTool")
-                        if useTool then
-                            local args2 = {
-                                [1] = "Punch";
-                            }
-                            useTool:FireServer(unpack(args2))
-                        end
-                    end
-                    
-                    task.wait(0.1)
+        while Value do
+            -- 传送玩家到指定位置
+            local player = game:GetService("Players").LocalPlayer
+            if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                local debris = workspace:FindFirstChild("Debris")
+                if debris and #debris:GetChildren() >= 70 then
+                    player.Character.HumanoidRootPart.CFrame = debris:GetChildren()[70]:GetPivot()
                 end
-            end)
-        else
-            if autoAttackThread then
-                task.cancel(autoAttackThread)
-                autoAttackThread = nil
             end
+            
+            -- 使用第一个装备攻击
+            local remotes = game:GetService("ReplicatedStorage"):FindFirstChild("Remotes")
+            if remotes then
+                local useTool = remotes:FindFirstChild("UseTool")
+                if useTool then
+                    local args1 = {
+                        [1] = "Stomp";
+                    }
+                    useTool:FireServer(unpack(args1))
+                end
+            end
+            
+            task.wait(0.1)
+            
+            -- 使用第二个装备攻击
+            if remotes then
+                local useTool = remotes:FindFirstChild("UseTool")
+                if useTool then
+                    local args2 = {
+                        [1] = "Punch";
+                    }
+                    useTool:FireServer(unpack(args2))
+                end
+            end
+            
+            task.wait(0.1)
         end
     end
 })
 
--- 自动吃食物功能
-local autoEatEnabled = false
-local autoEatThread = nil
-
 TabHandles.Features:Toggle({
     Title = "自动吃食物",
-    Desc = "自动使用食物",
+    Desc = "全自动吃食物",
     Value = false,
     Callback = function(Value)
-        autoEatEnabled = Value
-        if autoEatEnabled then
-            autoEatThread = task.spawn(function()
-                local ReplicatedStorage = game:GetService("ReplicatedStorage")  
-                local Remotes = ReplicatedStorage:WaitForChild("Remotes")  
-                local UseToolRemote = Remotes:WaitForChild("UseTool")
+        while Value do
+            -- Client-Side Script (StarterPlayerScripts)  
+            local ReplicatedStorage = game:GetService("ReplicatedStorage")  
+            local Remotes = ReplicatedStorage:WaitForChild("Remotes")  
+            local UseToolRemote = Remotes:WaitForChild("UseTool")
 
-                local args = {  
-                    "Food"  
-                }
+            local args = {  
+                "Food"  
+            }
 
-                while autoEatEnabled do  
-                    UseToolRemote:FireServer(unpack(args))  
-                    task.wait(0.05) -- Adjust to control spam rate (lower = faster)  
-                end
-            end)
-        else
-            if autoEatThread then
-                task.cancel(autoEatThread)
-                autoEatThread = nil
-            end
+            UseToolRemote:FireServer(unpack(args))  
+            task.wait(0.05) -- Adjust to control spam rate (lower = faster)  
         end
     end
 })
@@ -218,27 +192,9 @@ TabHandles.Config:Paragraph({
 -- 窗口关闭回调
 Window:OnClose(function()
     print("窗口已关闭")
-    -- 停止所有正在运行的线程
-    if autoAttackThread then
-        task.cancel(autoAttackThread)
-        autoAttackThread = nil
-    end
-    if autoEatThread then
-        task.cancel(autoEatThread)
-        autoEatThread = nil
-    end
 end)
 
 -- 窗口销毁回调
 Window:OnDestroy(function()
     print("窗口已销毁")
-    -- 停止所有正在运行的线程
-    if autoAttackThread then
-        task.cancel(autoAttackThread)
-        autoAttackThread = nil
-    end
-    if autoEatThread then
-        task.cancel(autoEatThread)
-        autoEatThread = nil
-    end
 end)
