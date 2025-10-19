@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XiPro售卖信息</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Header Styles */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInDown 1s ease;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+            color: #2c3e50;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .header h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%);
+            border-radius: 2px;
+        }
+        
+        /* Speech Bubble Announcement */
+        .announcement {
+            position: relative;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 50px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            animation: fadeIn 1.5s ease;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .announcement::before {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50px;
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 15px solid white;
+            filter: drop-shadow(0 5px 5px rgba(0, 0, 0, 0.1));
+        }
+        
+        .announcement p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #555;
+            font-weight: 400;
+        }
+        
+        .announcement .highlight {
+            color: #2575fc;
+            font-weight: 500;
+            background: rgba(37, 117, 252, 0.1);
+            padding: 2px 8px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        
+        /* Button Container */
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-top: 40px;
+        }
+        
+        /* Button Styles */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px 32px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            min-width: 220px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            border: none;
+            outline: none;
+            letter-spacing: 0.5px;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #6a11cb, #2575fc, #6a11cb);
+            background-size: 200% 200%;
+            z-index: -1;
+            transition: 0.5s;
+            border-radius: 50px;
+        }
+        
+        .btn:hover::before {
+            background-position: 100% 100%;
+        }
+        
+        .btn-qq-group {
+            color: white;
+        }
+        
+        .btn-qq-group::before {
+            background: linear-gradient(45deg, #25D366, #128C7E, #25D366);
+        }
+        
+        .btn-add-qq {
+            color: white;
+        }
+        
+        .btn-add-qq::before {
+            background: linear-gradient(45deg, #FD1D1D, #FC466B, #FD1D1D);
+        }
+        
+        .btn i {
+            margin-right: 12px;
+            font-size: 1.3rem;
+        }
+        
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        /* Floating Icons */
+        .floating-icons {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .floating-icon {
+            position: absolute;
+            opacity: 0.05;
+            font-size: 2rem;
+            animation: float 15s linear infinite;
+        }
+        
+        /* Footer */
+        .footer {
+            margin-top: 80px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #888;
+            animation: fadeIn 2s ease;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-100px) rotate(180deg);
+            }
+            100% {
+                transform: translateY(0) rotate(360deg);
+            }
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .announcement {
+                padding: 20px;
+            }
+            
+            .announcement p {
+                font-size: 1rem;
+            }
+            
+            .button-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .btn {
+                width: 100%;
+                padding: 14px 24px;
+            }
+        }
+        
+        /* Glow Effects */
+        .glow-effect {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(106, 17, 203, 0.1) 0%, rgba(106, 17, 203, 0) 70%);
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .glow-1 {
+            top: 20%;
+            left: 10%;
+            animation: pulse 8s ease infinite;
+        }
+        
+        .glow-2 {
+            bottom: 15%;
+            right: 10%;
+            animation: pulse 10s ease infinite 2s;
+            background: radial-gradient(circle, rgba(37, 117, 252, 0.1) 0%, rgba(37, 117, 252, 0) 70%);
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0.5;
+            }
+        }
+        
+        /* Subtle Pattern */
+        .pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+            z-index: -2;
+        }
+    </style>
+</head>
+<body>
+    <div class="pattern"></div>
+    <div class="glow-effect glow-1"></div>
+    <div class="glow-effect glow-2"></div>
+    
+    <div class="floating-icons" id="floating-icons"></div>
+    
+    <div class="container">
+        <header class="header">
+            <h1>XiPro售卡信息</h1>
+        </header>
+        
+        <div class="announcement">
+            <p>
+                <span class="highlight">QQ主群: 102679030</span><br><br>
+                需要购买的请加QQ <span class="highlight">1406238884</span> 进行购买，也可以找其他代理（神仇123作者那些）购买。
+            </p>
+        </div>
+        
+        <div class="button-container">
+            <a href="https://qm.qq.com/q/102679030" class="btn btn-qq-group" target="_blank">
+                <i class="fab fa-qq"></i> 加入QQ群
+            </a>
+            
+            <a href="https://wpa.qq.com/msgrd?v=3&uin=1406238884&site=qq&menu=yes" class="btn btn-add-qq" target="_blank">
+                <i class="fas fa-user-plus"></i> 购买添加
+            </a>
+        </div>
+    </div>
+    
+    <footer class="footer">
+        <p>© 2025 XiPro 版权所有 | 代理设计</p>
+    </footer>
+    
+    <script>
+        // Create floating icons
+        function createFloatingIcons() {
+            const container = document.getElementById('floating-icons');
+            const icons = ['fa-qq', 'fa-comment', 'fa-user', 'fa-shopping-cart', 'fa-headset'];
+            const count = 12;
+            
+            for (let i = 0; i < count; i++) {
+                const icon = document.createElement('i');
+                icon.classList.add('floating-icon', 'fas');
+                icon.classList.add(icons[Math.floor(Math.random() * icons.length)]);
+                
+                // Random position
+                const posX = Math.random() * 100;
+                const posY = Math.random() * 100;
+                
+                // Random size
+                const size = Math.random() * 20 + 10;
+                
+                // Random animation duration
+                const duration = Math.random() * 10 + 10;
+                
+                // Random delay
+                const delay = Math.random() * 5;
+                
+                icon.style.left = `${posX}%`;
+                icon.style.top = `${posY}%`;
+                icon.style.fontSize = `${size}px`;
+                icon.style.animationDuration = `${duration}s`;
+                icon.style.animationDelay = `${delay}s`;
+                
+                container.appendChild(icon);
+            }
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            createFloatingIcons();
+            
+            // Enhanced hover effect for buttons
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(button => {
+                button.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                    this.style.boxShadow = '0 12px 25px rgba(0, 0, 0, 0.15)';
+                });
+                
+                button.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.1)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
